@@ -3,19 +3,20 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var Dishes = require('../models/dishes');
+var Verify = require('./verify');
 
 var router = express.Router();
 router.use(bodyParser.json());
 
 router.route('/')
-  .get(function(req, res, next) {
+  .get(Verify.verifyOrdinaryUser, function(req, res, next) {
     Dishes.find({}, function (err, dishes) {
       if (err) throw err;
 
       res.json(dishes);
     });
   })
-  .post(function(req, res, next) {
+  .post(Verify.verifyOrdinaryUser, function(req, res, next) {
     Dishes.create(req.body, function (err, dish) {
       if (err) throw err;
 
@@ -28,7 +29,7 @@ router.route('/')
       res.end('Added the dish with id: ' + id);
     });
   })
-  .delete(function(req, res, next) {
+  .delete(Verify.verifyOrdinaryUser, function(req, res, next) {
     Dishes.remove({}, function (err, resp) {
       if (err) throw err;
 
@@ -119,7 +120,7 @@ router.route('/:dishId/comments/:commentId')
       dish.comments.push(req.body);
       dish.save(function (err, dish) {
         if (err) throw err;
-        
+
         console.log('Updated Comments!');
         res.json(dish);
       });
