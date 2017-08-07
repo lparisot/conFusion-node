@@ -3,19 +3,20 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 
 var Promotions = require('../models/promotions');
+var Verify = require('./verify');
 
 var router = express.Router();
 router.use(bodyParser.json());
 
 router.route('/')
-  .get(function(req, res, next) {
+  .get(Verify.verifyOrdinaryUser, function(req, res, next) {
     Promotions.find({}, function (err, promotions) {
       if (err) throw err;
 
       res.json(promotions);
     });
   })
-  .post(function(req, res, next) {
+  .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Promotions.create(req.body, function (err, promotion) {
       if (err) throw err;
 
@@ -28,7 +29,7 @@ router.route('/')
       res.end('Added the promotion with id: ' + id);
     });
   })
-  .delete(function(req, res, next) {
+  .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Promotions.remove({}, function (err, resp) {
       if (err) throw err;
 
@@ -58,7 +59,7 @@ router.route('/:id')
   .delete(function(req, res, next) {
     Promotions.findByIdAndRemove(req.params.id, function (err, resp) {
       if (err) throw err;
-      
+
       res.json(resp);
     });
   });

@@ -10,6 +10,28 @@ exports.getToken = function (user) {
   });
 };
 
+exports.verifyAdmin = function (req, res, next) {
+  if(req.decoded) {
+    if(req.decoded._doc.admin) {
+      return next();
+    }
+    else {
+      // if the user is not an administrator
+      // return an error
+      var err = new Error('You are not authorized to perform this operation!');
+      err.status = 403;
+      return next(err);
+    }
+  }
+  else {
+    // if there is no decoded user
+    // return an error
+    var err = new Error('Must log in');
+    err.status = 401;
+    return next(err);
+  }
+};
+
 exports.verifyOrdinaryUser = function (req, res, next) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token || req.headers['x-access-token'];
