@@ -38,14 +38,14 @@ router.route('/')
   });
 
 router.route('/:id')
-  .get(function(req, res ,next) {
+  .get(Verify.verifyOrdinaryUser, function(req, res ,next) {
     Promotions.findById(req.params.id, function (err, promotion) {
       if (err) throw err;
 
       res.json(promotion);
     });
   })
-  .put(function(req, res, next) {
+  .put(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Promotions.findByIdAndUpdate(req.params.id, {
       $set: req.body
     }, {
@@ -56,7 +56,7 @@ router.route('/:id')
       res.json(promotion);
     });
   })
-  .delete(function(req, res, next) {
+  .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Promotions.findByIdAndRemove(req.params.id, function (err, resp) {
       if (err) throw err;
 
