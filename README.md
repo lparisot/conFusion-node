@@ -17,20 +17,22 @@ GET /users : return all users if you are log in as an admin
 POST /register : create a new user
 in the body:
 {
-	"username": "test",
-	"password": "qwerty"
+	"username": "admin",
+	"password": "admin",
+	"firstname": "firstname",
+	"lastname": "lastname"
 }
 
 POST /users/login : log in operation
 in the body:
 {
 	"username": "admin",
-	"password": "qwerty"
+	"password": "admin"
 }
 
 GET /users/logout : log out operation
 ```
-You can change a created user role only by using directly mongo:
+You can change a created user role only by using directly mongoDB shell:
 ```bash
 $ mongo
 > use conFusion
@@ -47,19 +49,33 @@ Operations can be done on /dishes, /promotions or /leadership.
 ```bash
 GET /dishes : get all dishes
 POST /dishes : create a dish
+in the body:
+{
+  "name": "Uthapizza",
+  "image": "images/uthapizza.png",
+  "category": "mains",
+  "label": "Hot",
+  "price": "4.99",
+  "description": "A unique combination of Indian Uthappam (pancake) and Italian pizza, topped with Cerignola olives, ripe vine cherry tomatoes, Vidalia onion, Guntur chillies and Buffalo Paneer."
+}
 DELETE /dishes : delete all dishes
 
 GET /dishes/:id : get a particular dish
 PUT /dishes/:id : update a particular dish
 DELETE /dishes/:id : delete a particular dish
 
-GET /dishes/:id/comments : get all comments of a particular dish
-POST /dishes/:id/comments : insert a comment of a particular dish
-DELETE /dishes/:id/comments : delete all comments of a particular dish
+GET /dishes/:id/comments : get all comments on a particular dish
+POST /dishes/:id/comments : insert a comment on a particular dish
+in the body:
+{
+	"rating": 5,
+	"comment": "Imagine all the eatables, living in conFusion!"
+}
+DELETE /dishes/:id/comments : delete all comments on a particular dish
 
-GET /dishes/:id/comments/:id : get a particular comment of a particular dish
-PUT /dishes/:id/comments/:id : update a particular comment of a particular dish
-DELETE /dishes/:id/comments/:id : delete a particular comment of a particular dish
+GET /dishes/:id/comments/:id : get a particular comment on a particular dish
+PUT /dishes/:id/comments/:id : update a particular comment on a particular dish
+DELETE /dishes/:id/comments/:id : delete a particular comment on a particular dish
 ```
 
 JSON format is used to populate database, see models.
