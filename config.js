@@ -4,11 +4,11 @@ module.exports = {
   'facebook' : {
     clientID      : 'YOUR FACEBOOK APP ID',
     clientSecret  : 'YOUR FACEBOOK SECRET',
-    callbackURL   : 'https://localhost:3443/users/login/facebook/callback'
+    callbackURL   : '/users/login/facebook/callback'
   },
   'google'   : {
     clientID      : 'YOUR GOOGLE APP ID',
     clientSecret  : 'YOUR GOOGLE SECRET',
-    callbackURL   : 'https://localhost:3443/users/login/google/callback'
+    callbackURL   : '/users/login/google/callback'
   }
 }
