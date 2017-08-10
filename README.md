@@ -1,8 +1,30 @@
 # A little REST server using a mongoDB
 
+## Installation
+
+In root folder install all modules:
 ```bash
 $ npm install
+```
+
+Generate your private key and public certificate under the bin folder:
+```bash
+$ cd bin
+$ openssl genrsa 1024 > private.key
+$ openssl req -new -key private.key -out cert.csr
+$ openssl x509 -req -in cert.csr -signkey private.key -out certificate.pem
+```
+For Windows users, use git bash.
+
+## Start application
+
+In root folder you must launch the mongo data base:
+```bash
 $ mongod --dbpath=data
+```
+
+Then on another console, launch the server:
+```bash
 $ npm start
 ```
 The server is up on localhost:3000
@@ -32,12 +54,12 @@ in the body:
 
 GET /users/logout : log out operation
 ```
-You can change a created user role only by using directly mongoDB shell:
+You can change a user role only by using directly mongoDB shell:
 ```bash
 $ mongo
 > use conFusion
-> db.users.find().pretty()
 > db.users.update({username: "admin"}, {$set:{admin:true}})
+> db.users.find().pretty()
 ```
 Then you can do get, create, delete operations, using the token returned by the login operation, providing it in header fields as x-access-token.
 
