@@ -50,8 +50,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-// passport
+// Initialize Passport and restore authentication state, if any, from the session
 app.use(authenticate.initialize());
+app.use(authenticate.session());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
