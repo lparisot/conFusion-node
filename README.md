@@ -101,3 +101,12 @@ DELETE /dishes/:id/comments/:id : delete a particular comment on a particular di
 ```
 
 JSON format is used to populate database, see models.
+
+## OAuth2.0
+
+You must register your application on Facebook (https://developers.facebook.com/apps/) and Goggle (https://console.developers.google.com/apis/credentials) to retrieve the application ID and secret and store them in config.js.
+
+The callback URL must be https://localhost:3443/users/login/facebook/callback or  https://localhost:3443/users/login/google/callback
+
+Then you can log in via Facebook using the URL /users/login/facebook.
+Or via Google using the URL /users/login/google.
