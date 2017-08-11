@@ -1,15 +1,15 @@
 
-var GoogleStrategy = require('passport-google-oauth').OAuth2Strategy;
+var TwitterStrategy = require('passport-twitter').Strategy;
 var config = require('../config');
 var User = require('../models/user');
 
 // see https://console.developers.google.com/apis/credentials
 
 module.exports = function(passport) {
-  passport.use(new GoogleStrategy({
-    clientID: config.google.clientID,
-    clientSecret: config.google.clientSecret,
-    callbackURL: config.google.callbackURL
+  passport.use(new TwitterStrategy({
+    consumerKey: config.twitter.clientID,
+    consumerSecret: config.twitter.clientSecret,
+    callbackURL: config.twitter.callbackURL
   },
   function(accessToken, refreshToken, profile, done) {
     console.log("profile: " + JSON.stringify(profile));
@@ -25,7 +25,6 @@ module.exports = function(passport) {
         user = new User({ username: profile.displayName});
         user.OauthId = profile.id;
         user.OauthToken = accessToken;
-        user.email = profile.emails[0].value;
         user.save(function(err) {
           if(err) {
             console.log(err);

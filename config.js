@@ -10,5 +10,10 @@ module.exports = {
     clientID      : 'YOUR GOOGLE APP ID',
     clientSecret  : 'YOUR GOOGLE SECRET',
     callbackURL   : '/users/login/google/callback'
+  },
+  'twitter'   : {
+    clientID      : 'YOUR TWITTER APP ID',
+    clientSecret  : 'YOUR TWITTER SECRET',
+    callbackURL   : '/users/login/twitter/callback'
   }
 }

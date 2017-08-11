@@ -1,4 +1,5 @@
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -51,6 +52,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 // Initialize Passport and restore authentication state, if any, from the session
+app.use(session({
+  secret: config.secretKey,
+  resave: false,
+  saveUninitialized: true
+}));
 app.use(authenticate.initialize());
 app.use(authenticate.session());
 

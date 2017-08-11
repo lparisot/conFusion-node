@@ -6,6 +6,31 @@ var Verify = require('./verify');
 
 var router = express.Router();
 
+function login(req, res, next, err, user, info) {
+  if (err) {
+    return next(err);
+  }
+  if (!user) {
+    return res.status(401).json({
+      err: info
+    });
+  }
+  req.logIn(user, function(err) {
+    if (err) {
+      return res.status(500).json({
+        err: 'Could not log in user'
+      });
+    }
+
+    var token = Verify.getToken(user);
+    res.status(200).json({
+      status: 'Login successful!',
+      success: true,
+      token: token
+    });
+  });
+}
+
 /* GET users listing if admin */
 router.get('/', Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     User.find({}, function (err, users) {
@@ -44,59 +69,17 @@ router.post('/register', function(req, res) {
 
 router.post('/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({
-        err: info
-      });
-    }
-    req.logIn(user, function(err) {
-      if (err) {
-        return res.status(500).json({
-          err: 'Could not log in user'
-        });
-      }
-
-      var token = Verify.getToken(user);
-      res.status(200).json({
-        status: 'Login successful!',
-        success: true,
-        token: token
-      });
-    });
+    login(req, res, next, err, user, info);
   })(req, res, next);
 });
 
 router.get('/login/facebook',
-  passport.authenticate('facebook'),
-  function(req, res) {}
+  passport.authenticate('facebook')
 );
 
 router.get('/login/facebook/callback', function(req,res,next) {
   passport.authenticate('facebook', function(err, user, info) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({
-        err: info
-      });
-    }
-    req.logIn(user, function(err) {
-      if (err) {
-        return res.status(500).json({
-          err: 'Could not log in user'
-        });
-      }
-      var token = Verify.getToken(user);
-      res.status(200).json({
-        status: 'Login successful!',
-        success: true,
-        token: token
-      });
-    });
+    login(req, res, next, err, user, info);
   })(req,res,next);
 });
 
@@ -104,29 +87,19 @@ router.get('/login/google',
   passport.authenticate('google', { scope : ['profile', 'email'] })
 );
 
-router.get('/login/google/callback', function(req,res,next) {
+router.get('/login/google/callback', function(req, res, next) {
   passport.authenticate('google', function(err, user, info) {
-    if (err) {
-      return next(err);
-    }
-    if (!user) {
-      return res.status(401).json({
-        err: info
-      });
-    }
-    req.logIn(user, function(err) {
-      if (err) {
-        return res.status(500).json({
-          err: 'Could not log in user'
-        });
-      }
-      var token = Verify.getToken(user);
-      res.status(200).json({
-        status: 'Login successful!',
-        success: true,
-        token: token
-      });
-    });
+    login(req, res, next, err, user, info);
+  })(req,res,next);
+});
+
+router.get('/login/twitter',
+  passport.authenticate('twitter')
+);
+
+router.get('/login/twitter/callback', function(req, res, next) {
+  passport.authenticate('twitter', function(err, user, info) {
+    login(req, res, next, err, user, info);
   })(req,res,next);
 });
 
