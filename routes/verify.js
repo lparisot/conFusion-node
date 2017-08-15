@@ -12,7 +12,7 @@ exports.getToken = function (user) {
 
 exports.verifyAdmin = function (req, res, next) {
   if(req.decoded) {
-    if(req.decoded._doc.admin) {
+    if(req.decoded.admin) {
       return next();
     }
     else {

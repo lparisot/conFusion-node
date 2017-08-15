@@ -9,16 +9,16 @@ var router = express.Router();
 router.use(bodyParser.json());
 
 router.route('/')
-  .get(Verify.verifyOrdinaryUser, function(req, res, next) {
-    Leaders.find({}, function (err, leaders) {
-      if (err) throw err;
+  .get(function(req, res, next) {
+    Leaders.find(req.query, function (err, leaders) {
+      if (err) return next(err);
 
       res.json(leaders);
     });
   })
   .post(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Leaders.create(req.body, function (err, leader) {
-      if (err) throw err;
+      if (err) return next(err);
 
       console.log('Leader created!');
       var id = leader._id;
@@ -31,16 +31,16 @@ router.route('/')
   })
   .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Leaders.remove({}, function (err, resp) {
-      if (err) throw err;
+      if (err) return next(err);
 
       res.json(resp);
     });
   });
 
 router.route('/:id')
-  .get(Verify.verifyOrdinaryUser, function(req,res,next) {
+  .get(function(req,res,next) {
     Leaders.findById(req.params.id, function (err, leader) {
-      if (err) throw err;
+      if (err) return next(err);
 
       res.json(leader);
     });
@@ -51,14 +51,14 @@ router.route('/:id')
     }, {
       new: true
     }, function (err, leader) {
-      if (err) throw err;
+      if (err) return next(err);
 
       res.json(leader);
     });
   })
   .delete(Verify.verifyOrdinaryUser, Verify.verifyAdmin, function(req, res, next) {
     Leaders.findByIdAndRemove(req.params.id, function (err, resp) {
-      if (err) throw err;
+      if (err) return next(err);
 
       res.json(resp);
     });

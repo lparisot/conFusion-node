@@ -11,26 +11,26 @@ router.use(bodyParser.json());
 router.route('/')
   .all(Verify.verifyOrdinaryUser)
   .get(function(req, res, next) {
-    // get all favorites of the user req.decoded._doc._id
-    Favorites.findOne({ postedBy: req.decoded._doc._id })
+    // get all favorites of the user req.decoded._id
+    Favorites.findOne({ postedBy: req.decoded._id })
       .populate('postedBy')
       .populate('dishes')
       .exec(function (err, favorites) {
-        if (err) return res.status(500).send(null);
+        if (err) return next(err);
 
         res.json(favorites);
       });
   })
   .post(function(req, res, next) {
-    // add a favorite for the user req.decoded._doc._id
+    // add a favorite for the user req.decoded._id
     Favorites.findOne(
-      { postedBy: req.decoded._doc._id },
+      { postedBy: req.decoded._id },
       function (err, favorite) {
-        if (err) return res.status(500).send(null);
+        if (err) return next(err);
 
         // if we don't have favorites, create it
         if(!favorite) {
-          favorite = new Favorites({ postedBy: req.decoded._doc._id });
+          favorite = new Favorites({ postedBy: req.decoded._id });
         }
 
         // if we don't already have this dish as favorite, add it
@@ -40,7 +40,7 @@ router.route('/')
         }
 
         favorite.save(function (err, favorite) {
-          if (err) return res.status(500).send(null);
+          if (err) return next(err);
 
           res.json(favorite);
         });
@@ -48,11 +48,11 @@ router.route('/')
     );
   })
   .delete(function(req, res, next) {
-    // delete all favorites of the user req.decoded._doc._id
+    // delete all favorites of the user req.decoded._id
     Favorites.remove(
-      { postedBy: req.decoded._doc._id },
+      { postedBy: req.decoded._id },
       function (err, resp) {
-        if (err) return res.status(500).send(null);
+        if (err) return next(err);
 
         res.json(resp);
       }
@@ -62,9 +62,9 @@ router.route('/')
 router.route('/:dishObjectId')
   .all(Verify.verifyOrdinaryUser)
   .delete(function(req, res, next) {
-    // delete a particular favorite of the user: req.decoded._doc._id
+    // delete a particular favorite of the user: req.decoded._id
     Favorites.findOne(
-      { postedBy: req.decoded._doc._id },
+      { postedBy: req.decoded._id },
       function (err, favorite) {
         if (err) return res.status(500).send(null);
 
@@ -73,7 +73,7 @@ router.route('/:dishObjectId')
           favorite.dishes.remove(req.params.dishObjectId);
 
           favorite.save(function (err, favorite) {
-            if (err) res.status(500).send(null);
+            if (err) return next(err);
             return res.json(favorite);
           });
         } else {
