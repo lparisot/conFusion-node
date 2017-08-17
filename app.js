@@ -1,4 +1,5 @@
 var express = require('express');
+var cors = require('cors');
 var session = require('express-session');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -39,6 +40,9 @@ app.all('*', function(req, res, next) {
 
   res.redirect('https://'+req.hostname+':'+app.get('secPort')+req.url);
 });
+
+// solve cors problem
+app.use(cors());
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

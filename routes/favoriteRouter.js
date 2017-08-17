@@ -23,6 +23,7 @@ router.route('/')
   })
   .post(function(req, res, next) {
     // add a favorite for the user req.decoded._id
+    console.log("add favorite for"+req.decoded.username)
     Favorites.findOne(
       { postedBy: req.decoded._id },
       function (err, favorite) {
